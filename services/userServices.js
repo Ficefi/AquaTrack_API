@@ -7,6 +7,11 @@ export const findUserByEmail = async (email) => {
   return user;
 };
 
+export const findUserByToken = async (token) => {
+  const user = await User.findOne({ token });
+  return user;
+};
+
 export const createUser = async (userData) => {
   const newUser = new User(userData);
   await newUser.hashPasswords();
@@ -29,7 +34,22 @@ export const updateUserWithToken = async (id) => {
   return updatedUser;
 };
 
+export const updateUserData = async (id, userData) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { ...userData },
+    { new: true }
+  );
+  return updatedUser;
+};
+
 export const validatePassword = async (password, hash) => {
   const valid = await bcrypt.compare(password, hash);
   return valid;
+};
+
+export const getAllUsers = async () => {
+  const users = await User.find({});
+  const usersCount = users.length;
+  return usersCount;
 };
