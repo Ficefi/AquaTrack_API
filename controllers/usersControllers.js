@@ -2,8 +2,11 @@ import HttpError from '../helpers/HttpError.js';
 import {
   createUser,
   findUserByEmail,
+  findUserByToken,
   validatePassword,
   updateUserWithToken,
+  updateUserData,
+  getAllUsers,
 } from '../services/userServices.js';
 import gravatar from 'gravatar';
 
@@ -62,6 +65,52 @@ export const LogOut = async (req, res, next) => {
 
     res.status(204).json({
       message: 'No content',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userCurrent = async (req, res, next) => {
+  const { token } = req.user;
+  try {
+    const user = await findUserByToken(token);
+    const { name, email, gender, weight, time, waterRate, avatarURL } = user;
+
+    if (!user) {
+      throw HttpError(401, 'User doesn`t exist');
+    }
+
+    res.status(200).json({
+      name,
+      email,
+      gender,
+      weight,
+      time,
+      waterRate,
+      avatarURL,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userUpdate = async (req, res, next) => {
+  const { id } = req.user;
+  const data = req.body;
+  try {
+    const user = await updateUserData(id, data);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const countOfUsers = async (req, res, next) => {
+  try {
+    const response = await getAllUsers();
+    res.status(200).json({
+      userCount: response,
     });
   } catch (error) {
     next(error);

@@ -1,5 +1,5 @@
 import HttpError from '../helpers/HttpError.js';
-import isValidJWT from './isValidJWT.js';
+import { isValidJWT } from './isValidJWT.js';
 import { User } from '../model/user.js';
 
 export const auth = async (req, res, next) => {
@@ -22,7 +22,9 @@ export const auth = async (req, res, next) => {
     }
     req.user = user;
     next();
+
   } catch (e) {
     next(HttpError(401, 'Unauthorized2'));
-  }
+
+  } 
 };
