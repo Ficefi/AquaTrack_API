@@ -1,5 +1,5 @@
 import HttpError from '../helpers/HttpError.js';
-import isValidJWT from './isValidJWT.js';
+import { isValidJWT } from './isValidJWT.js';
 import { User } from '../model/user.js';
 
 export const auth = async (req, res, next) => {
@@ -7,22 +7,20 @@ export const auth = async (req, res, next) => {
   const [bearer, token] = authorization.split(' ');
 
   if (bearer !== 'Bearer') {
-    next(HttpError(401, 'Unauthorized3'));
+    next(HttpError(401, 'Unauthorized'));
   }
 
   try {
     const { id } = isValidJWT(token);
-    console.log('auth.id', id);
 
     const user = await User.findById(id);
-    console.log('auth.user', user);
 
     if (!user?.token || user.token !== token) {
-      next(HttpError(401, 'Unauthorized1'));
+      next(HttpError(401, 'Unauthorized'));
     }
     req.user = user;
     next();
-  } catch (e) {
-    next(HttpError(401, 'Unauthorized2'));
+  } catch (error) {
+    next(error);
   }
 };

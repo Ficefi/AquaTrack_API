@@ -11,6 +11,10 @@ const waterConsumptionSchema = new Schema(
       type: Date,
       default: Date.now,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    },
   },
   {
     timestamps: true,

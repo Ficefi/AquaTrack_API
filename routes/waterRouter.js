@@ -7,20 +7,20 @@ import {
   updateWaterConsumption,
 } from '../controllers/waterControllers.js';
 
-// import { auth } from '../middlewares/authenticate.js';
+import { auth } from '../middlewares/authenticate.js';
 
 // import validateBody from '../helpers/validateBody.js';
 
 const waterRouter = express.Router();
 
-waterRouter.post('/', addWaterConsumption);
+waterRouter.post('/', auth, addWaterConsumption);
 
-waterRouter.put('/:id', updateWaterConsumption);
+waterRouter.put('/:id', auth, updateWaterConsumption);
 
-waterRouter.get('/day/:id/:date', getWaterConsumptionByDay);
+waterRouter.get('/day/:id/:date', auth, getWaterConsumptionByDay);
 
-waterRouter.get('/month/:id/:year/:month', getWaterConsumptionByMonth);
+waterRouter.get('/month/:id/:year/:month', auth, getWaterConsumptionByMonth);
 
-waterRouter.delete('/:id', deleteWaterRecord);
+waterRouter.delete('/:id', auth, deleteWaterRecord);
 
 export default waterRouter;
