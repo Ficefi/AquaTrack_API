@@ -1,5 +1,4 @@
 import { model, Schema } from 'mongoose';
-// import { v4 as uuidv4 } from 'uuid';
 
 const waterConsumptionSchema = new Schema(
   {
@@ -21,12 +20,5 @@ const waterConsumptionSchema = new Schema(
     versionKey: false,
   }
 );
-
-// waterConsumptionSchema.pre('save', async function (next) {
-//   if (!this.userId) {
-//     this.userId = uuidv4();
-//   }
-//   next();
-// });
 
 export const Water = model('Water', waterConsumptionSchema);

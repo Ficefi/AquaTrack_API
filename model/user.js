@@ -12,10 +12,34 @@ const userSchema = new Schema(
       required: [true, 'Email is required'],
       unique: true,
     },
+    name: {
+      type: String,
+      default: null,
+    },
+    gender: {
+      type: String,
+      default: null,
+    },
+    weight: {
+      type: Number,
+      default: null,
+    },
+    time: {
+      type: Number,
+      default: null,
+    },
+    waterRate: {
+      type: Number,
+      default: null,
+    },
     avatarURL: String,
     token: {
       type: String,
       default: null,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
     },
   },
   { versionKey: false }

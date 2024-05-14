@@ -40,9 +40,7 @@ async function deleteRecordByIdAndOwner(id, owner) {
       _id: id,
       owner,
     });
-    console.log('idRE', id);
-    console.log('ownerRE', owner);
-    console.log('deleteRecord', deleteRecord);
+
     return deleteRecord;
   } catch (error) {
     throw error;
