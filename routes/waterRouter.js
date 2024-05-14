@@ -9,8 +9,6 @@ import {
 
 import { auth } from '../middlewares/authenticate.js';
 
-// import validateBody from '../helpers/validateBody.js';
-
 const waterRouter = express.Router();
 
 waterRouter.post('/', auth, addWaterConsumption);
