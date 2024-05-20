@@ -16,18 +16,34 @@ async function updateWaterById(id, owner, data) {
   return waterRecord;
 }
 
-async function getWaterConsumptionByDate(id, startOfDay, endOfDay, owner) {
+// async function getWaterConsumptionByDate(id, startOfDay, endOfDay, owner) {
+//   const waterConsumption = await Water.find({
+//     _id: id,
+//     owner,
+//     date: { $gte: startOfDay, $lt: endOfDay },
+//   });
+//   return waterConsumption;
+// }
+
+async function getWaterConsumptionByDate(startOfDay, endOfDay, owner) {
   const waterConsumption = await Water.find({
-    _id: id,
     owner,
     date: { $gte: startOfDay, $lt: endOfDay },
   });
   return waterConsumption;
 }
 
-async function fetchWaterConsumptionByMonth(id, startDate, endDate, owner) {
+// async function fetchWaterConsumptionByMonth(id, startDate, endDate, owner) {
+//   const waterConsumption = await Water.find({
+//     _id: id,
+//     owner,
+//     date: { $gte: startDate, $lte: endDate },
+//   });
+//   return waterConsumption;
+// }
+
+async function fetchWaterConsumptionByMonth(startDate, endDate, owner) {
   const waterConsumption = await Water.find({
-    _id: id,
     owner,
     date: { $gte: startDate, $lte: endDate },
   });

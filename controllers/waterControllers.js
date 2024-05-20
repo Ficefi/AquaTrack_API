@@ -53,8 +53,8 @@ export const updateWaterConsumption = async (req, res) => {
 };
 
 export const getWaterConsumptionByDay = async (req, res) => {
-  const { id, date } = req.params;
-  if (!id || !date) {
+  const { date } = req.params;
+  if (!date) {
     return res.status(400).json({ message: 'Missing params' });
   }
 
@@ -73,7 +73,6 @@ export const getWaterConsumptionByDay = async (req, res) => {
 
     const { _id: owner } = req.user;
     const waterConsumption = await getWaterConsumptionByDate(
-      id,
       startOfDay,
       endOfDay,
       owner
@@ -89,19 +88,23 @@ export const getWaterConsumptionByDay = async (req, res) => {
 };
 
 export const getWaterConsumptionByMonth = async (req, res) => {
-  const { id, year, month } = req.params;
+  const { date } = req.params;
 
-  if (!id || !year || !month) {
+  if (!date) {
     return res.status(400).json({
-      message: 'Missing required parameters',
+      message: 'Missing required parameter: date',
     });
   }
 
-  if (isNaN(year) || isNaN(month)) {
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate)) {
     return res.status(400).json({
-      message: 'Year and month must be numeric values',
+      message: 'Invalid date format',
     });
   }
+
+  const year = parsedDate.getFullYear();
+  const month = parsedDate.getMonth() + 1;
 
   if (month < 1 || month > 12) {
     return res.status(400).json({
@@ -115,12 +118,11 @@ export const getWaterConsumptionByMonth = async (req, res) => {
   try {
     const { _id: owner } = req.user;
     const waterConsumption = await fetchWaterConsumptionByMonth(
-      id,
       startDate,
       endDate,
       owner
     );
-    console.log('WATERCo', waterConsumption);
+
     res.status(200).json(waterConsumption);
   } catch (error) {
     res.status(500).json({
