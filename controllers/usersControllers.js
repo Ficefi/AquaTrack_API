@@ -99,8 +99,35 @@ export const userUpdate = async (req, res, next) => {
   const { id } = req.user;
   const data = req.body;
   try {
-    const user = await updateUserData(id, data);
+    if (req.file) {
+      const avatarURL = req.file.path;
+      var user = await updateUserData(id, { data, avatarURL });
+    } else {
+      var user = await updateUserData(id, data);
+    }
+
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const refreshToken = async (req, res, next) => {
+  const { token } = req.body;
+  try {
+    const refreshToken = signToken(
+      currentUser.id,
+      process.env.REFRESH_SECRET_KEY,
+      process.env.REFRESH_EXPIRES_IN
+    );
+
+    currentUser.accessToken = accessToken;
+    currentUser.refreshToken = refreshToken;
+    await currentUser.save();
+
+    req.currentUserRef = currentUser;
+    req.accessToken = accessToken;
+    req.refreshToken = refreshToken;
   } catch (error) {
     next(error);
   }

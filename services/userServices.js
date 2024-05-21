@@ -34,6 +34,19 @@ export const updateUserWithToken = async (id) => {
   return updatedUser;
 };
 
+export const updateUserTokenByToken = async (token) => {
+  const { SECRET_KEY } = process.env;
+
+  const newToken = jsonwebtoken.sign({ token }, SECRET_KEY);
+
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { token },
+    { new: true }
+  );
+  return updatedUser;
+};
+
 export const updateUserData = async (id, userData) => {
   const updatedUser = await User.findByIdAndUpdate(
     id,
