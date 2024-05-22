@@ -5,26 +5,6 @@ async function addWater(data, owner) {
   return waterRecord;
 }
 
-async function updateWaterById(id, owner, data) {
-  const waterRecord = await Water.findByIdAndUpdate(
-    id,
-    { ...data, owner },
-    {
-      new: true,
-    }
-  );
-  return waterRecord;
-}
-
-// async function getWaterConsumptionByDate(id, startOfDay, endOfDay, owner) {
-//   const waterConsumption = await Water.find({
-//     _id: id,
-//     owner,
-//     date: { $gte: startOfDay, $lt: endOfDay },
-//   });
-//   return waterConsumption;
-// }
-
 async function getWaterConsumptionByDate(startOfDay, endOfDay, owner) {
   const waterConsumption = await Water.find({
     owner,
@@ -32,15 +12,6 @@ async function getWaterConsumptionByDate(startOfDay, endOfDay, owner) {
   });
   return waterConsumption;
 }
-
-// async function fetchWaterConsumptionByMonth(id, startDate, endDate, owner) {
-//   const waterConsumption = await Water.find({
-//     _id: id,
-//     owner,
-//     date: { $gte: startDate, $lte: endDate },
-//   });
-//   return waterConsumption;
-// }
 
 async function fetchWaterConsumptionByMonth(startDate, endDate, owner) {
   const waterConsumption = await Water.find({
@@ -65,7 +36,6 @@ async function deleteRecordByIdAndOwner(id, owner) {
 
 export {
   addWater,
-  updateWaterById,
   getWaterConsumptionByDate,
   fetchWaterConsumptionByMonth,
   deleteRecordByIdAndOwner,

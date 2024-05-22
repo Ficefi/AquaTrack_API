@@ -1,9 +1,9 @@
+import { Water } from '../model/water.js';
 import {
   addWater,
   deleteRecordByIdAndOwner,
   fetchWaterConsumptionByMonth,
   getWaterConsumptionByDate,
-  updateWaterById,
 } from '../services/waterService.js';
 
 export const addWaterConsumption = async (req, res) => {
@@ -32,23 +32,49 @@ export const updateWaterConsumption = async (req, res) => {
       .status(400)
       .json({ message: 'Body must have at least one field' });
   }
+
   const { id } = req.params;
+
   const { _id: owner } = req.user;
 
+  const { date, consumedVolume } = req.body;
+
+  if (!date) {
+    return res.status(400).json({ message: 'Date field is required' });
+  }
+
   try {
-    const waterRecord = await updateWaterById(id, owner, req.body);
+    const waterRecord = await Water.findOne({ _id: id, owner });
 
     if (!waterRecord) {
-      return res
-        .status(404)
-        .json({ message: 'Water consumption record not found' });
+      return res.status(404).json({
+        message: 'Water consumption record not found',
+      });
     }
+
+    const existingDate = new Date(waterRecord.date);
+    const newDate = new Date(date);
+
+    if (existingDate.toDateString() !== newDate.toDateString()) {
+      return res
+        .status(400)
+        .json({ message: 'Only time can be updated, not the date' });
+    }
+
+    waterRecord.date = newDate;
+    if (consumedVolume !== undefined) {
+      waterRecord.consumedVolume = consumedVolume;
+    }
+
+    await waterRecord.save();
+
     res.status(200).json(waterRecord);
   } catch (error) {
     console.error('Failed to update water consumption record:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to update water consumption record', error });
+    res.status(500).json({
+      message: 'Failed to update water consumption record',
+      error: error.message,
+    });
   }
 };
 
