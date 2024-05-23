@@ -4,6 +4,7 @@ import {
   createRefresh,
   isValidRefresh,
 } from '../middlewares/isValidJWT.js';
+import { nanoid } from 'nanoid';
 import bcrypt from 'bcryptjs';
 import 'dotenv/config';
 
@@ -39,14 +40,14 @@ export const updateUserWithToken = async (id) => {
 };
 
 export const updateUserTokens = async (token) => {
-  const id = isValidRefresh(token);
+  const { id } = isValidRefresh(token);
   const accessToken = createJWT({ id });
   const refreshToken = createRefresh({ id });
   const tokens = { accessToken, refreshToken };
 
-  const updatedUser = await User.findOneAndUpdate(
+  await User.findByIdAndUpdate(
     id,
-    { accessToken: accessToken, refreshToken: refreshToken },
+    { accessToken, refreshToken },
     { new: true }
   );
 

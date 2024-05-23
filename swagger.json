@@ -99,15 +99,6 @@
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to the current user"
-          }
-        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "204": {
@@ -129,15 +120,6 @@
       "get": {
         "tags": ["Auth"],
         "summary": "Get info about current user",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to the current user."
-          }
-        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
@@ -165,15 +147,6 @@
       "get": {
         "tags": ["Auth"],
         "summary": "Refresh user tokens",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "User Refresh Token"
-          }
-        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
@@ -223,15 +196,6 @@
       "put": {
         "tags": ["Auth"],
         "summary": "Update info about user",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to the update user."
-          }
-        ],
         "security": [{ "Bearer": [true] }],
         "requestBody": {
           "description": "Object for update user",
@@ -266,7 +230,7 @@
         }
       }
     },
-    "water/": {
+    "/water/": {
       "post": {
         "tags": ["Water"],
         "summary": "Route to post about water",
@@ -313,18 +277,11 @@
         }
       }
     },
-    "water/day/:date": {
+    "/water/day/:date": {
       "get": {
         "tags": ["Water"],
         "summary": "Route to get info about how much water was drinked by the day",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to authorize the user."
-          },
           {
             "name": "Date",
             "in": "path",
@@ -358,18 +315,11 @@
         }
       }
     },
-    "water/month-stats/:date": {
+    "/water/month-stats/:date": {
       "get": {
         "tags": ["Water"],
         "summary": "Route to get info about how much water was drinked by the month",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to authorize the user."
-          },
           {
             "name": "Month-Stats",
             "in": "path",
@@ -403,18 +353,11 @@
         }
       }
     },
-    "water/:id": {
+    "/water/:id": {
       "put": {
         "tags": ["Water"],
         "summary": "Route to update info about how much water was drinked by the day",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to authorize the user."
-          },
           {
             "name": "Update water info",
             "in": "path",
@@ -451,13 +394,6 @@
         "tags": ["Water"],
         "summary": "Route to delete info about how much water was drinked by the day",
         "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to authorize the user."
-          },
           {
             "name": "Delete water info",
             "in": "path",
