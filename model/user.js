@@ -33,7 +33,11 @@ const userSchema = new Schema(
       default: null,
     },
     avatarURL: String,
-    token: {
+    accessToken: {
+      type: String,
+      default: null,
+    },
+    refreshToken: {
       type: String,
       default: null,
     },

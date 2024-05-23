@@ -161,6 +161,42 @@
         }
       }
     },
+    "/users/refresh": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Refresh user tokens",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "http",
+            "description": "User Refresh Token"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing token authorization ",
+            "content": {}
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {}
+          }
+        }
+      }
+    },
     "/users/users_count": {
       "get": {
         "tags": ["Auth"],
@@ -383,7 +419,7 @@
             "name": "Update water info",
             "in": "path",
             "required": true,
-            "description": "Put route",
+            "description": "User id",
             "schema": {
               "type": "string"
             }
@@ -396,7 +432,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaterGetResponse"
+                  "$ref": "#/components/schemas/WaterPostResponse"
                 }
               }
             }
@@ -426,7 +462,7 @@
             "name": "Delete water info",
             "in": "path",
             "required": true,
-            "description": "Delete route",
+            "description": "User id",
             "schema": {
               "type": "string"
             }
@@ -439,7 +475,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WaterGetResponse"
+                  "$ref": "#/components/schemas/WaterPostResponse"
                 }
               }
             }
@@ -610,7 +646,72 @@
           }
         ]
       },
-      "CurrentResponse": {},
+      "CurrentResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "_id": {
+                "type": "string",
+                "description": "user`s id"
+              },
+              "password": {
+                "type": "string",
+                "description": "user`s password"
+              },
+              "email": {
+                "type": "string",
+                "description": "user`s email",
+                "format": "email"
+              },
+              "name": {
+                "type": "string",
+                "description": "user`s name"
+              },
+              "gender": {
+                "type": "string",
+                "description": "user`s name"
+              },
+              "weight": {
+                "type": "number",
+                "description": "user`s weight"
+              },
+              "time": {
+                "type": "number",
+                "description": "user`s time for sport"
+              },
+              "waterRate": {
+                "type": "number",
+                "description": "user`s waterRate"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "user`s avatarURL"
+              },
+              "token": {
+                "type": "string",
+                "description": "user`s token"
+              }
+            }
+          }
+        },
+
+        "example": [
+          {
+            "_id": "664ce5b36a1a12bf746265c7",
+            "password": "$2a$10$lWIBnmq8a3sV1sXXcjpmGOax1Drw4qxNt4ViiQiB244NoUYAPox.G",
+            "email": "jasonwilhem12@gmail.com",
+            "name": "Jason Wilhem",
+            "gender": "male",
+            "weight": 98,
+            "time": 3,
+            "waterRate": 1000,
+            "avatarURL": "http://www.gravatar.com/avatar/cae73c2e854be6c0a89fcd6bbb5b28be",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGNlNWIzNmExYTA4YmY3NDYyNjVjNyIsImlhdCI6MTcxNjMyMjEyMn0.J5T57VS3La7R271mBFr6gzV8TlrnKYDc1lbBWjh_KmA"
+          }
+        ]
+      },
       "CountUsersResponse": {
         "type": "object",
         "properties": {
@@ -699,6 +800,24 @@
             "waterRate": 1000,
             "avatarURL": "http://www.gravatar.com/avatar/cae73c2e854be6c0a89fcd6bbb5b28be",
             "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NGNlNWIzNmExYTA4YmY3NDYyNjVjNyIsImlhdCI6MTcxNjMyMjEyMn0.J5T57VS3La7R271mBFr6gzV8TlrnKYDc1lbBWjh_KmA"
+          }
+        ]
+      },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "type": "string",
+          "description": "Message about count of registred users",
+          "example": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJpZCI6IjY2NGY1NTczZTM2MjFhZWRkODkwZDhlZSIsImlhdCI6MTcxNjQ3NTMwNSwiZXhwIjoxNzE3NzcxMzA1fSwiaWF0IjoxNzE2NDgxMDE0LCJleHAiOjE3MTY1MjQyMTR9.HZUYz2LQvr0zDE46OpUQt7vG2dRGLvLW1aBvCfq8BJc",
+            "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJpZCI6IjY2NGY1NTczZTM2MjFhZWRkODkwZDhlZSIsImlhdCI6MTcxNjQ3NTMwNSwiZXhwIjoxNzE3NzcxMzA1fSwiaWF0IjoxNzE2NDgxMDE0LCJleHAiOjE3MTc3NzcwMTR9.qSgMOEjBrtK6XlXa9bwKM4v5xHP3CSmPQkqtx1nLfm4"
+          }
+        },
+
+        "example": [
+          {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJpZCI6IjY2NGY1NTczZTM2MjFhZWRkODkwZDhlZSIsImlhdCI6MTcxNjQ3NTMwNSwiZXhwIjoxNzE3NzcxMzA1fSwiaWF0IjoxNzE2NDgxMDE0LCJleHAiOjE3MTY1MjQyMTR9.HZUYz2LQvr0zDE46OpUQt7vG2dRGLvLW1aBvCfq8BJc",
+            "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJpZCI6IjY2NGY1NTczZTM2MjFhZWRkODkwZDhlZSIsImlhdCI6MTcxNjQ3NTMwNSwiZXhwIjoxNzE3NzcxMzA1fSwiaWF0IjoxNzE2NDgxMDE0LCJleHAiOjE3MTc3NzcwMTR9.qSgMOEjBrtK6XlXa9bwKM4v5xHP3CSmPQkqtx1nLfm4"
           }
         ]
       },

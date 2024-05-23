@@ -1,6 +1,11 @@
 import { User } from '../model/user.js';
-import jsonwebtoken from 'jsonwebtoken';
+import {
+  createJWT,
+  createRefresh,
+  isValidRefresh,
+} from '../middlewares/isValidJWT.js';
 import bcrypt from 'bcryptjs';
+import 'dotenv/config';
 
 export const findUserByEmail = async (email) => {
   const user = await User.findOne({ email });
@@ -21,30 +26,31 @@ export const createUser = async (userData) => {
 };
 
 export const updateUserWithToken = async (id) => {
-  const { SECRET_KEY } = process.env;
-
-  const token = jsonwebtoken.sign({ id }, SECRET_KEY);
+  const accessToken = createJWT({ id });
+  const refreshToken = createRefresh({ id });
 
   const updatedUser = await User.findByIdAndUpdate(
     id,
-    { token },
+    { accessToken: accessToken, refreshToken: refreshToken },
     { new: true }
   );
 
   return updatedUser;
 };
 
-export const updateUserTokenByToken = async (token) => {
-  const { SECRET_KEY } = process.env;
+export const updateUserTokens = async (token) => {
+  const id = isValidRefresh(token);
+  const accessToken = createJWT({ id });
+  const refreshToken = createRefresh({ id });
+  const tokens = { accessToken, refreshToken };
 
-  const newToken = jsonwebtoken.sign({ token }, SECRET_KEY);
-
-  const updatedUser = await User.findByIdAndUpdate(
+  const updatedUser = await User.findOneAndUpdate(
     id,
-    { token },
+    { accessToken: accessToken, refreshToken: refreshToken },
     { new: true }
   );
-  return updatedUser;
+
+  return tokens;
 };
 
 export const updateUserData = async (id, userData) => {

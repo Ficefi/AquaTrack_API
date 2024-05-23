@@ -1,14 +1,15 @@
 import HttpError from '../helpers/HttpError.js';
+import gravatar from 'gravatar';
 import {
   createUser,
   findUserByEmail,
   findUserByToken,
   validatePassword,
   updateUserWithToken,
+  updateUserTokens,
   updateUserData,
   getAllUsers,
 } from '../services/userServices.js';
-import gravatar from 'gravatar';
 
 export const SignUp = async (req, res, next) => {
   const { email, password } = req.body;
@@ -48,7 +49,8 @@ export const SignIn = async (req, res, next) => {
     const newUser = await updateUserWithToken(user.id);
 
     res.status(200).json({
-      token: newUser.token,
+      token: newUser.accessToken,
+      refreshToken: newUser.refreshToken,
       user: {
         email,
       },
@@ -113,21 +115,11 @@ export const userUpdate = async (req, res, next) => {
 };
 
 export const refreshToken = async (req, res, next) => {
-  const { token } = req.body;
+  const token = req.user.refreshToken;
   try {
-    const refreshToken = signToken(
-      currentUser.id,
-      process.env.REFRESH_SECRET_KEY,
-      process.env.REFRESH_EXPIRES_IN
-    );
+    const { accessToken, refreshToken } = await updateUserTokens(token);
 
-    currentUser.accessToken = accessToken;
-    currentUser.refreshToken = refreshToken;
-    await currentUser.save();
-
-    req.currentUserRef = currentUser;
-    req.accessToken = accessToken;
-    req.refreshToken = refreshToken;
+    res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     next(error);
   }

@@ -1,8 +1,8 @@
 import HttpError from '../helpers/HttpError.js';
-import { isValidJWT } from './isValidJWT.js';
+import { isValidRefresh } from './isValidJWT.js';
 import { User } from '../model/user.js';
 
-export const auth = async (req, res, next) => {
+export const refreshAuth = async (req, res, next) => {
   const { authorization = '' } = req.headers;
   const [bearer, token] = authorization.split(' ');
 
@@ -11,11 +11,11 @@ export const auth = async (req, res, next) => {
   }
 
   try {
-    const { id } = isValidJWT(token);
+    const { id } = isValidRefresh(token);
 
     const user = await User.findById(id);
 
-    if (!user?.accessToken || user.accessToken !== token) {
+    if (!user?.refreshToken || user.refreshToken !== token) {
       next(HttpError(401, 'Unauthorized'));
     }
     req.user = user;
