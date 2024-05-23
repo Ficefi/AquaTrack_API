@@ -8,13 +8,24 @@ import {
 
 export const addWaterConsumption = async (req, res) => {
   try {
-    const { consumedVolume } = req.body;
+    const { consumedVolume, date } = req.body;
+
     if (!req.user || !req.user._id) {
       return res.status(400).json({ message: 'User information missing' });
     }
-    const owner = req.user._id;
 
-    const newRecord = await addWater({ consumedVolume }, owner);
+    if (!date) {
+      return res.status(400).json({ message: 'Date is required' });
+    }
+
+    const owner = req.user._id;
+    const newDate = new Date(date);
+
+    if (isNaN(newDate)) {
+      return res.status(400).json({ message: 'Invalid date format' });
+    }
+
+    const newRecord = await addWater({ consumedVolume, date: newDate }, owner);
 
     res.status(201).json(newRecord);
   } catch (error) {
@@ -80,6 +91,7 @@ export const updateWaterConsumption = async (req, res) => {
 
 export const getWaterConsumptionByDay = async (req, res) => {
   const { date } = req.params;
+
   if (!date) {
     return res.status(400).json({ message: 'Missing params' });
   }
@@ -103,6 +115,9 @@ export const getWaterConsumptionByDay = async (req, res) => {
       endOfDay,
       owner
     );
+
+    // Виконання сортування після отримання даних
+    waterConsumption.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     res.status(200).json(waterConsumption);
   } catch (error) {
@@ -149,6 +164,9 @@ export const getWaterConsumptionByMonth = async (req, res) => {
       owner
     );
 
+    // Виконання сортування після отримання даних
+    waterConsumption.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     res.status(200).json(waterConsumption);
   } catch (error) {
     res.status(500).json({
@@ -161,9 +179,7 @@ export const getWaterConsumptionByMonth = async (req, res) => {
 export const deleteWaterRecord = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log('id', id);
     const { _id: owner } = req.user;
-    console.log('owner', owner);
 
     const deleteRecord = await deleteRecordByIdAndOwner(id, owner);
 
