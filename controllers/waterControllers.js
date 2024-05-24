@@ -14,18 +14,9 @@ export const addWaterConsumption = async (req, res) => {
       return res.status(400).json({ message: 'User information missing' });
     }
 
-    if (!date) {
-      return res.status(400).json({ message: 'Date is required' });
-    }
-
     const owner = req.user._id;
-    const newDate = new Date(date);
 
-    if (isNaN(newDate)) {
-      return res.status(400).json({ message: 'Invalid date format' });
-    }
-
-    const newRecord = await addWater({ consumedVolume, date: newDate }, owner);
+    const newRecord = await addWater({ consumedVolume, time: time }, owner);
 
     res.status(201).json(newRecord);
   } catch (error) {

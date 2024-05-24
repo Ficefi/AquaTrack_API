@@ -5,11 +5,13 @@ import {
   findUserByEmail,
   findUserByToken,
   validatePassword,
+  registerTokens,
   updateUserWithToken,
   updateUserTokens,
   updateUserData,
   getAllUsers,
 } from '../services/userServices.js';
+import { nanoid } from 'nanoid';
 
 export const SignUp = async (req, res, next) => {
   const { email, password } = req.body;
@@ -18,15 +20,20 @@ export const SignUp = async (req, res, next) => {
     if (user) {
       throw HttpError(409, 'User already exist');
     }
+    const id = nanoid();
 
     const avatarURL = gravatar.url(email, null, false);
 
-    await createUser({ email, password, avatarURL });
+    const { accessToken, refreshToken } = registerTokens(id);
+
+    await createUser({ email, password, avatarURL, accessToken, refreshToken });
 
     res.status(201).json({
       user: {
         email,
       },
+      token: accessToken,
+      refreshToken,
       message: 'User created',
     });
   } catch (error) {
@@ -38,6 +45,7 @@ export const SignIn = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const user = await findUserByEmail(email);
+
     if (!user) {
       throw HttpError(401, 'Email is wrong');
     }

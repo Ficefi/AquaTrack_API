@@ -234,15 +234,6 @@
       "post": {
         "tags": ["Water"],
         "summary": "Route to post about water",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "http",
-            "description": "The token issued to authorize the user."
-          }
-        ],
         "security": [{ "Bearer": [true] }],
         "requestBody": {
           "description": "Post info about waterConsumption",
